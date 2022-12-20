@@ -1,10 +1,7 @@
-from imblearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import classification_report
-from sklearn.metrics import RocCurveDisplay
-from imblearn.combine import SMOTEENN
 
 
 
@@ -26,19 +23,7 @@ def get_pipeline(features_num: list, features_cat: list, classifier, random_stat
 
     pipe_final = Pipeline([
         ('pre_processor', pre_processor),
-        ('Smote-enn', SMOTEENN(random_state=random_state)),
-        ('classifier', classifier(random_state=random_state))
+        ('classifier', classifier)
     ])
 
     return pipe_final
-
-def fit_model(model, X_train, y_train, X_test, y_test):
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    print(classification_report(y_test, y_pred))
-    try:
-        print(model.best_params_)
-        print(f"Best Score: {model.best_score_}") 
-    except:
-        pass
-    RocCurveDisplay.from_predictions(y_test, y_pred)
